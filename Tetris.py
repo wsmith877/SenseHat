@@ -29,7 +29,18 @@ mpeices = []
 while time > 0:
     time -= 1
     for event in sense.stick.get_event():
-        
+        if event.action == "pressed" and event.direction == "up":
+          up = 1
+        else:
+          up = 0
+        if event.action == "pressed" and event.direction == "left":
+          left = 1
+        else:
+          left = 0
+        if event.action == "pressed" and event.direction == "right":
+          right = 1
+        else:
+          right = 0
     """choosing random peice and color"""
     if peicedone == 1:
         peice = 1
@@ -50,11 +61,11 @@ while time > 0:
             color = v
     """moving peice"""
     peicey2 -= 1
-    if :
+    if left == 1:
         peicex2 -= 1
-    if :
+    if right == 1:
         peicex2 += 1
-    if :
+    if up == 1:
         rotation += 1
     if rotation == 2:
         rotation = 0
