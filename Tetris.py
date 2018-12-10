@@ -28,19 +28,21 @@ peices = []
 mpeices = []
 while time > 0:
     time -= 1
-    for event in sense.stick.get_event():
-        if event.action == "pressed" and event.direction == "up":
-          up = 1
-        else:
-          up = 0
-        if event.action == "pressed" and event.direction == "left":
-          left = 1
-        else:
-          left = 0
-        if event.action == "pressed" and event.direction == "right":
-          right = 1
-        else:
-          right = 0
+    up = 0
+    right = 0
+    left = 0
+    down = 0
+    for event in sense.stick.get_events():
+        if event.action == "pressed":
+          # Check which direction
+          if event.direction == "up":
+             up = 1   # Up arrow
+          if event.direction == "down":
+             down = 1      # Down arrow
+          if event.direction == "left": 
+             left = 1      # Left arrow
+          if event.direction == "right":
+             right = 1      # Right arrow
     """choosing random peice and color"""
     if peicedone == 1:
         peice = 1
@@ -61,10 +63,13 @@ while time > 0:
             color = v
     """moving peice"""
     peicey2 -= 1
+    peicey -= 1
     if left == 1:
         peicex2 -= 1
+        peicex -= 1
     if right == 1:
         peicex2 += 1
+        peicex += 1
     if up == 1:
         rotation += 1
     if rotation == 2:
@@ -91,4 +96,3 @@ while time > 0:
     for block in mpeices:
             sense.set_pixel(block[0],block[1],block[2])
     sleep(1)
-
