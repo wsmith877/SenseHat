@@ -20,11 +20,7 @@ start = 1
 peicedone = 0
 score = 0
 rotation = 0
-peicex = 0
-peicey = 0
-peicex2 = 0
-peicey2 = 0
-color = 0
+color = g
 peices = []
 mpeices = []
 mpeices2 = []
@@ -74,55 +70,45 @@ while time > 0:
         elif color == 6:
             color = v
     """moving peice"""
-    peicey2 -= 1
-    peicey -= 1
-    if left == 1:
-        peicex2 -= 1
-        peicex -= 1
-    if right == 1:
-        peicex2 += 1
-        peicex += 1
     if up == 1:
         rotation += 1
     if rotation == 2:
         rotation = 0
     """Collision"""
     mpeices2 = mpeices
-    for block in mpeices2:
-        del block[2]
-        if left == 1:
-            block[0] -= 1
-        if right == 1:
-            block[0] += 1
-        for i in bounds:
-            if good1 == 1:
-                if block == i:
-                    good1 = 0
-        for i in peices:
-            if good1 == 1:
-                if block == i:
-                    good1 = 0
-        block[1] -= 1
-        for i in bounds:
-            if good2 == 1:
-                if block == i:
-                    good2 = 0
-        for i in peices:
-            if good2 == 1:
-                if block == i:
-                    good2 = 0
-    for block in mpeices:
-        if good1 == 1:
+    if start == 0:
+        for b in mpeices2:
             if left == 1:
-                block[0] -= 1
+                b[0] -= 1
             if right == 1:
-                block[0] += 1
-        if good2 == 1:
-            block[1] += 1
-        else:
-            peicedone = 1
-    peicex2 = 0
-    peicey2 = 0
+                b[0] += 1
+            for i in bounds:
+                if good1 == 1:
+                    if b == i:
+                        good1 = 0
+            for i in peices:
+                if good1 == 1:
+                    if b == i:
+                        good1 = 0
+            b[1] -= 1
+            for i in bounds:
+                if good2 == 1:
+                    if b == i:
+                        good2 = 0
+            for i in peices:
+                if good2 == 1:
+                    if b == i:
+                        good2 = 0
+        for block in mpeices:
+            if good1 == 1:
+                if left == 1:
+                    block[0] -= 0
+                if right == 1:
+                    block[0] += 0
+            if good2 == 1:
+                block[1] -= 0
+            else:
+                peicedone = 1
     """adding block to "global" peices"""
     if peicedone == 1:
         peices.append[mpeices[0]]
@@ -134,20 +120,17 @@ while time > 0:
         peices.append[mpeices[0]]
         del mpeices[0]
     """starting peice"""
-    if start == 1:
+    if (peice == 1 and peicedone == 1) or start == 1:
         start = 0
-        peicedone = 1
-    if peice == 1 and peicedone == 1:
-        peicex = 4
-        peicey = 7
-        mpeices.append([4,7,color])
-        mpeices.append([3,7,color])
-        mpeices.append([2,7,color])
-        mpeices.append([5,7,color])
+        peicedone = 0
+        mpeices.append([4,7])
+        mpeices.append([3,7])
+        mpeices.append([2,7])
+        mpeices.append([5,7])
         peicedone = 0
     sense.clear()
     for block in peices:
-            sense.set_pixel(block[0],block[1],block[2])
+            sense.set_pixel(block[0],block[1],color)
     for block in mpeices:
-            sense.set_pixel(block[0],block[1],block[2])
+            sense.set_pixel(block[0],block[1],color)
     sleep(1)
