@@ -10,7 +10,10 @@ t = (0, 200, 200)
 b = (0, 0, 200)
 v = (200, 0, 200)
 n = (0, 0, 0)
+outstandingmove = 0
+points = 0
 counter = 0
+count = []
 up = 0
 left = 0
 right = 0
@@ -26,6 +29,7 @@ line = 0
 color = g
 peicex = 0
 peicey = 0
+rang = [7,6,5,4,3,2,1,0]
 peices = []
 mpeices = []
 mpeices2 = []
@@ -37,7 +41,10 @@ bounds = [
     ]
 good1 = 1
 good2 = 1
-while time > 0:
+while outstandingmove == 0:
+    for aagg in peices:
+        if aagg == [4,7]:
+            outstandingmove = 1
     good1 = 1
     good2 = 1
     good3 = 1
@@ -61,18 +68,22 @@ while time > 0:
              right = 1      # Right arrow
     """clearing lines"""
     if peicedone == 1:
-        for oop in range(0,8):
+        for oop in rang:
+            count.clear()
             for oof in peices:
                 if oof[1] == oop:
                     line += 1
-            print(line)
             if line == 8:
+                points += 1
                 counter = 0
                 for what in peices:
                     if what[1] == oop:
-                        del peices[counter]
-                    else:
-                        counter += 1
+                        count.append(counter)
+                    counter += 1
+                count.sort()
+                count = count[::-1]
+                for numbs in count:
+                    del peices[numbs]
                 for wat in peices:
                     if wat[1] > oop:
                         wat[1] -= 1
@@ -95,7 +106,7 @@ while time > 0:
         elif color == 6:
             color = v
     if peicedone == 1 or start == 1:
-        peice = 1
+        peice = randint(1,2)
         peicedone = 2
     """moving peice"""
     protation = rotation
@@ -139,42 +150,13 @@ while time > 0:
                     mpeices.append([peicex,peicey+2])
                 else:
                     rotation = 0
-            if rotation == 0 and protation == 1 and peice == 1 and peicey < 6:
-                for m in peices:
-                    if good3 == 0:
-                        if [peicex,peicey] == m:
-                            good3 = 0
-                        if [peicex-1,peicey] == m:
-                            good3 = 0
-                        if [peicex+1,peicey] == m:
-                            good3 = 0
-                        if [peicex-2,peicey] == m:
-                            good3 = 0
-                for x in bounds:
-                    if good3 == 0:
-                        if [peicex,peicey] == x:
-                            good3 = 0
-                        if [peicex-1,peicey] == x:
-                            good3 = 0
-                        if [peicex+1,peicey] == x:
-                            good3 = 0
-                        if [peicex-2,peicey] == x:
-                            good3 = 0
-                if good3 == 1 and peicey > 1:
-                    del mpeices[0]
-                    del mpeices[0]
-                    del mpeices[0]
-                    del mpeices[0]
-                    mpeices.append([peicex,peicey])
-                    mpeices.append([peicex-1,peicey])
-                    mpeices.append([peicex+1,peicey])
-                    mpeices.append([peicex-2,peicey])
-                else:
-                    rotation = 1
             if left == 1:
                 b[0] -= 1
-            if right == 1:
+            if right == 1 and peice == 1:
                 if peice != 1 or rotation != 1 or peicex != 7:
+                    b[0] += 1
+            if right == 1 and peice == 2:
+                if peice != 2 or peicex != 7:
                     b[0] += 1
             for i in bounds:
                 if good1 == 1:
@@ -208,8 +190,11 @@ while time > 0:
                 block[1] += 1
     if left == 1:
         peicex -= 1
-    if right == 1:
+    if right == 1 and peice == 1:
         if peice != 1 or rotation != 1 or peicex != 7:
+            peicex += 1
+    if right == 1 and peice == 2:
+        if peice != 2 or peicex != 7:
             peicex += 1
     if good2 == 1:
         peicey -= 1
@@ -223,12 +208,23 @@ while time > 0:
         del mpeices[0]
         del mpeices[0]
         del mpeices[0]
+    """no mpeices?"""
+    if len(mpeices) == 0 and peicedone == 0 and start == 0:
+        peicedone = 1
     """starting peice"""
     if (peice == 1 and peicedone == 2) or start == 1:
         mpeices.append([4,7])
         mpeices.append([3,7])
         mpeices.append([2,7])
         mpeices.append([5,7])
+        peicex = 4
+        peicey = 7
+        peicedone = 0
+    if (peice == 2 and peicedone == 2):
+        mpeices.append([4,7])
+        mpeices.append([3,7])
+        mpeices.append([4,6])
+        mpeices.append([3,6])
         peicex = 4
         peicey = 7
         peicedone = 0
@@ -246,4 +242,14 @@ while time > 0:
     if down == 1:
         sleep(0.3)
     else:
-        sleep(1)
+        if points > 4:
+            sleep(0.5)
+        elif points > 9:
+            sleep(0.3)
+        else:
+            sleep(0.8)
+sense.clear()
+if points == 1:
+    sense.show_message("Good! You Got 1 Point!")
+else:
+    sense.show_message("Good! You Got " + str(points) + " Points!")
