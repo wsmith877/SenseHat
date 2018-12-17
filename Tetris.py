@@ -10,6 +10,7 @@ t = (0, 200, 200)
 b = (0, 0, 200)
 v = (200, 0, 200)
 n = (0, 0, 0)
+counter = 0
 up = 0
 left = 0
 right = 0
@@ -21,11 +22,11 @@ peicedone = 0
 score = 0
 rotation = 0
 protation = 0
+line = 0
 color = g
 peicex = 0
 peicey = 0
 peices = []
-peices2 = []
 mpeices = []
 mpeices2 = []
 bounds = [
@@ -58,9 +59,26 @@ while time > 0:
              left = 1      # Left arrow
           if event.direction == "right":
              right = 1      # Right arrow
+    """clearing lines"""
+    if peicedone == 1:
+        for oop in range(0,8):
+            for oof in peices:
+                if oof[1] == oop:
+                    line += 1
+            print(line)
+            if line == 8:
+                counter = 0
+                for what in peices:
+                    if what[1] == oop:
+                        del peices[counter]
+                    else:
+                        counter += 1
+                for wat in peices:
+                    if wat[1] > oop:
+                        wat[1] -= 1
+            line = 0
     """choosing random peice and color"""
-    if peicedone == 1 or start == 1:
-        peice = 1
+    if start == 1:
         color = randint(0,6)
         if color == 0:
             color = r
@@ -76,6 +94,9 @@ while time > 0:
             color = b
         elif color == 6:
             color = v
+    if peicedone == 1 or start == 1:
+        peice = 1
+        peicedone = 2
     """moving peice"""
     protation = rotation
     if up == 1:
@@ -86,7 +107,7 @@ while time > 0:
     mpeices2 = mpeices
     if start == 0:
         for b in mpeices2: 
-            if rotation == 1 and protation == 0 and peice == 1:
+            if rotation == 1 and protation == 0 and peice == 1 and peicey < 6:
                 for m in peices:
                     if good3 == 0:
                         if [peicex,peicey] == m:
@@ -118,8 +139,8 @@ while time > 0:
                     mpeices.append([peicex,peicey+2])
                 else:
                     rotation = 0
-            if rotation == 0 and protation == 1 and peice == 1:
-                for m in peices2:
+            if rotation == 0 and protation == 1 and peice == 1 and peicey < 6:
+                for m in peices:
                     if good3 == 0:
                         if [peicex,peicey] == m:
                             good3 = 0
@@ -153,12 +174,13 @@ while time > 0:
             if left == 1:
                 b[0] -= 1
             if right == 1:
-                b[0] += 1
+                if peice != 1 or rotation != 1 or peicex != 7:
+                    b[0] += 1
             for i in bounds:
                 if good1 == 1:
                     if b == i:
                         good1 = 0
-            for k in peices2:
+            for k in peices:
                 if good1 == 1:
                     if b == k:
                         good1 = 0
@@ -176,7 +198,7 @@ while time > 0:
                 if good2 == 1:
                     if b == l:
                         good2 = 0
-            for z in peices2:
+            for z in peices:
                 if good2 == 1:
                     if b == z:
                         good2 = 0
@@ -187,7 +209,8 @@ while time > 0:
     if left == 1:
         peicex -= 1
     if right == 1:
-        peicex += 1
+        if peice != 1 or rotation != 1 or peicex != 7:
+            peicex += 1
     if good2 == 1:
         peicey -= 1
     left2 = 0
@@ -195,31 +218,32 @@ while time > 0:
     """adding block to "global" peices"""
     if peicedone == 1:
         for i in mpeices:
-            peices2.append(i)
-            i.append(color)
             peices.append(i)
         del mpeices[0]
         del mpeices[0]
         del mpeices[0]
         del mpeices[0]
     """starting peice"""
-    if (peice == 1 and peicedone == 1) or start == 1:
-        peicedone = 0
+    if (peice == 1 and peicedone == 2) or start == 1:
         mpeices.append([4,7])
         mpeices.append([3,7])
         mpeices.append([2,7])
         mpeices.append([5,7])
         peicex = 4
         peicey = 7
+        peicedone = 0
     sense.clear()
     if start == 0:
         if len(peices) >= 1:
             for j in peices:
                 if j[1] < 8:
-                    sense.set_pixel(j[0],7 - j[1],j[2])
+                    sense.set_pixel(j[0],7 - j[1],color)
         for u in mpeices:
             if u[1] < 8:
                 sense.set_pixel(u[0],7 - u[1],color)
     else:
         start = 0
-    sleep(1)
+    if down == 1:
+        sleep(0.3)
+    else:
+        sleep(1)
