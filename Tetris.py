@@ -2,14 +2,14 @@ from sense_hat import SenseHat
 from time import  sleep
 from random import randint
 sense = SenseHat()
-r = (200, 0, 0)
-o = (200, 100, 0)
-y = (100, 200, 0)
-g = (0, 200, 0)
-t = (0, 200, 200)
-b = (0, 0, 200)
-v = (200, 0, 200)
-n = (0, 0, 0)
+red = (200, 0, 0)
+orange = (200, 100, 0)
+yellow = (100, 200, 0)
+green = (0, 200, 0)
+terquise = (0, 200, 200)
+blue = (0, 0, 200)
+violet = (200, 0, 200)
+colorswitch = 0
 outstandingmove = 0
 points = 0
 counter = 0
@@ -26,7 +26,7 @@ score = 0
 rotation = 0
 protation = 0
 line = 0
-color = g
+color = green
 peicex = 0
 peicey = 0
 rang = [7,6,5,4,3,2,1,0]
@@ -75,6 +75,7 @@ while outstandingmove == 0:
                     line += 1
             if line == 8:
                 points += 1
+                colorswitch = 1
                 counter = 0
                 for what in peices:
                     if what[1] == oop:
@@ -89,22 +90,23 @@ while outstandingmove == 0:
                         wat[1] -= 1
             line = 0
     """choosing random peice and color"""
-    if start == 1:
+    if start == 1 or colorswitch == 1:
         color = randint(0,6)
         if color == 0:
-            color = r
+            color = red
         elif color == 1:
-            color = o
+            color = orange
         elif color == 2:
-            color = y
+            color = yellow
         elif color == 3:
-            color = g
+            color = green
         elif color == 4:
-            color = t
+            color = terquise
         elif color == 5:
-            color = b
+            color = blue
         elif color == 6:
-            color = v
+            color = violet
+        colorswitch = 0
     if peicedone == 1 or start == 1:
         peice = randint(1,2)
         peicedone = 2
@@ -118,7 +120,7 @@ while outstandingmove == 0:
     mpeices2 = mpeices
     if start == 0:
         for b in mpeices2: 
-            if rotation == 1 and protation == 0 and peice == 1 and peicey < 6:
+            if rotation == 1 and protation == 0 and peice == 1 and peicey < 7:
                 for m in peices:
                     if good3 == 0:
                         if [peicex,peicey] == m:
@@ -139,7 +141,7 @@ while outstandingmove == 0:
                             good3 = 0
                         if [peicex,peicey+2] == x:
                             good3 = 0
-                if good3 == 1 and peicey > 1:
+                if good3 == 1 and peicey > 0:
                     del mpeices[0]
                     del mpeices[0]
                     del mpeices[0]
@@ -246,10 +248,16 @@ while outstandingmove == 0:
             sleep(0.5)
         elif points > 9:
             sleep(0.3)
+        elif points > 14:
+            sleep(0.2)
+        elif points > 19:
+            sleep(0.15)
         else:
-            sleep(0.8)
+            sleep(0.7)
 sense.clear()
-if points == 1:
-    sense.show_message("Good! You Got 1 Point!")
+if points == 0:
+    sense.show_message("Bad! You Got No Points...", scroll_speed = 0.05)
+elif points == 1:
+    sense.show_message("Good! You Got 1 Point!", scroll_speed = 0.05)
 else:
-    sense.show_message("Good! You Got " + str(points) + " Points!")
+    sense.show_message("Good! You Got " + str(points) + " Points!", scroll_speed = 0.05)
